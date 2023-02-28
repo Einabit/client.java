@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  java-sdk:
+    build:
+      context: .
+    depends_on:
+      - sandbox
+  sandbox:
+    image: einabit/sandbox
+    environment:
+      CONFIG: |
+          temp1:
+            value:
+              min: 0
+              max: 100
+              step: 1
+            interval:
+              ms: 400
+              skip: 0
