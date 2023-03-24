@@ -25,11 +25,15 @@ public class EinabitClient {
     }
 
     public String value(final String variable) {
-        return execute(Operation.VALUE.name().toLowerCase() + MESSAGE_DELIMITER + variable);
+        return execute(Operation.VALUE.name().toLowerCase() +
+                MESSAGE_DELIMITER + variable);
     }
 
     public String fetch(final String variable, final long from, final long to) {
-        return execute(Operation.FETCH.name().toLowerCase() + MESSAGE_DELIMITER + variable + MESSAGE_DELIMITER + from + MESSAGE_DELIMITER + to);
+        return execute(Operation.FETCH.name().toLowerCase() +
+                MESSAGE_DELIMITER + variable +
+                MESSAGE_DELIMITER + from +
+                MESSAGE_DELIMITER + to);
     }
 
     public void tap(final String variable, final EinabitServerListener callback) {
@@ -38,7 +42,8 @@ public class EinabitClient {
                 final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
-            dataOutputStream.writeBytes(Operation.TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable);
+            dataOutputStream.writeBytes(Operation.TAP.name().toLowerCase() +
+                    MESSAGE_DELIMITER + variable);
 
             int readBytes;
 
@@ -50,10 +55,6 @@ public class EinabitClient {
         } catch (IOException e) {
             LOGGER.severe("Could not read the value");
         }
-    }
-
-    private Socket connect() throws IOException {
-        return new Socket(host, port);
     }
 
     private String execute(final String message) {
@@ -70,6 +71,10 @@ public class EinabitClient {
         }
 
         return null;
+    }
+
+    private Socket connect() throws IOException {
+        return new Socket(host, port);
     }
 
     public static class EinabitClientBuilder {
