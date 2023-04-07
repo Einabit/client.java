@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  sandbox:
+    image: einabit/sandbox
+    environment:
+      CONFIG: |
+        temp1:
+          value:
+            min: 0
+            max: 100
+            step: 1
+          interval:
+            ms: 400
+            skip: 0
+        crg1:
+          value:
+            min: 20
+            max: 40
+            step: 2
+          interval:
+            ms: 1200
+            skip: .5
+  einabit-client:
+    build:
+      context: .
+    restart: always
+    environment:
+      - EINABIT_HOST=sandbox
+    depends_on:
+      sandbox:
+        condition: service_started
