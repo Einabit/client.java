@@ -1,9 +1,13 @@
 package com.einabit.client;
 
+import com.einabit.client.security.AESEncryptor;
+import com.einabit.client.security.Encryptor;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import static com.einabit.client.Operation.*;
@@ -22,10 +26,15 @@ public class EinabitClient {
 
     private final String host;
     private final int port;
+    private Encryptor encryptor;
 
-    private EinabitClient(final String host, final int port) {
+    private EinabitClient(final String host, final int port, final String key) {
         this.host = host;
         this.port = port;
+
+        if (key != null && !key.isEmpty()) {
+            this.encryptor = new AESEncryptor(key);
+        }
     }
 
     /**
@@ -111,7 +120,11 @@ public class EinabitClient {
                 final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
-            dataOutputStream.writeBytes(message);
+            final String messageToWrite = Optional.ofNullable(encryptor)
+                    .map(validEncryptor -> validEncryptor.encrypt(message))
+                    .orElse(message);
+
+            dataOutputStream.writeBytes(messageToWrite);
 
             return new String(dataInputStream.readAllBytes());
         } catch (IOException e) {
@@ -135,6 +148,7 @@ public class EinabitClient {
 
         private String host;
         private int port = 1337;
+        private String key;
 
         /**
          * Configure Einabit client host.
@@ -159,12 +173,23 @@ public class EinabitClient {
         }
 
         /**
+         * Configure Einabit client key.
+         *
+         * @param key key
+         * @return einabit client builder
+         */
+        public EinabitClientBuilder key(final String key) {
+            this.key = key;
+            return this;
+        }
+
+        /**
          * Build Einabit client.
          *
          * @return Einabit client
          */
         public EinabitClient build() {
-            return new EinabitClient(host, port);
+            return new EinabitClient(host, port, key);
         }
 
     }
