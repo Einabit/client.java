@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+import static com.einabit.client.Operation.*;
+
 /**
  * Einabit client.
  * <p>
@@ -42,7 +44,7 @@ public class EinabitClient {
      * @return variable value
      */
     public String value(final String variable) {
-        return execute(Operation.VALUE.name().toLowerCase() +
+        return execute(VALUE.name().toLowerCase() +
                 MESSAGE_DELIMITER + variable);
     }
 
@@ -55,7 +57,7 @@ public class EinabitClient {
      * @return values delimited by commas
      */
     public String fetch(final String variable, final long from, final long to) {
-        return execute(Operation.FETCH.name().toLowerCase() +
+        return execute(FETCH.name().toLowerCase() +
                 MESSAGE_DELIMITER + variable +
                 MESSAGE_DELIMITER + from +
                 MESSAGE_DELIMITER + to);
@@ -76,8 +78,7 @@ public class EinabitClient {
                 final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
-            dataOutputStream.writeBytes(Operation.TAP.name().toLowerCase() +
-                    MESSAGE_DELIMITER + variable);
+            dataOutputStream.writeBytes(TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable);
 
             int readBytes;
 
@@ -89,6 +90,19 @@ public class EinabitClient {
         } catch (IOException e) {
             LOGGER.severe("Could not read the value");
         }
+    }
+
+    /**
+     * Fetch last n values of a variable.
+     *
+     * @param variable variable
+     * @param amount   amount of values to fetch
+     * @return values delimited by commas
+     */
+    public String last(final String variable, final Integer amount) {
+        return execute(LAST.name().toLowerCase() +
+                MESSAGE_DELIMITER + variable +
+                MESSAGE_DELIMITER + amount);
     }
 
     private String execute(final String message) {

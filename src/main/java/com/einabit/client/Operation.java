@@ -24,6 +24,13 @@ public enum Operation {
      * <p>
      * Operation which allows you to subscribe to a variable and continuously receive its values.
      */
-    TAP
+    TAP,
+
+    /**
+     * Last operation.
+     * <p>
+     * Operation which allows you to fetch the last n values.
+     */
+    LAST
 
 }

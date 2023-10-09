@@ -36,7 +36,17 @@ operations:
      */
     public void tap(final String variable, final EinabitServerListener callback);
   ```
-
+- __last__:
+  ```java
+    /*
+     * Fetch last n values of a variable.
+     *
+     * @param variable variable
+     * @param amount   amount of values to fetch
+     * @return values delimited by commas
+     */
+    public String last(final String variable, final Integer amount);
+  ```
 # Usage example
 
 1. Create the client:
