@@ -6,6 +6,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
+/**
+ * Einabit client.
+ * <p>
+ * Predefined client which you can use to perform different operations against Einabit services. We recommend
+ * using our {@link EinabitClient#builder()} to ease you setting up the configuration for the client.
+ */
 public class EinabitClient {
 
     private static final Logger LOGGER = Logger.getLogger(EinabitClient.class.getName());
@@ -20,15 +26,34 @@ public class EinabitClient {
         this.port = port;
     }
 
+    /**
+     * Einabit client builder.
+     *
+     * @return einabit client builder
+     */
     public static EinabitClientBuilder builder() {
         return new EinabitClientBuilder();
     }
 
+    /**
+     * Get current value of a variable.
+     *
+     * @param variable variable
+     * @return variable value
+     */
     public String value(final String variable) {
         return execute(Operation.VALUE.name().toLowerCase() +
                 MESSAGE_DELIMITER + variable);
     }
 
+    /**
+     * Fetch values of a variable.
+     *
+     * @param variable variable
+     * @param from     from timestamp
+     * @param to       to timestamp
+     * @return values delimited by commas
+     */
     public String fetch(final String variable, final long from, final long to) {
         return execute(Operation.FETCH.name().toLowerCase() +
                 MESSAGE_DELIMITER + variable +
@@ -36,6 +61,15 @@ public class EinabitClient {
                 MESSAGE_DELIMITER + to);
     }
 
+    /**
+     * Subscribe to a variable.
+     * <p>
+     * In order to use this operation you will need to implement {@link EinabitServerListener} interface
+     * in your custom listener.
+     *
+     * @param variable variable
+     * @param callback callback which will be executed everytime it receives a value.
+     */
     public void tap(final String variable, final EinabitServerListener callback) {
         try (
                 final Socket socket = connect();
@@ -77,21 +111,44 @@ public class EinabitClient {
         return new Socket(host, port);
     }
 
+    /**
+     * Einabit client builder.
+     * <p>
+     * Allows to easily create new clients with predefined operations. By default, the port is 1337, in
+     * case you need to specify a different one you can do it by using {@link EinabitClientBuilder#port(int)} method.
+     */
     public static class EinabitClientBuilder {
 
         private String host;
         private int port = 1337;
 
+        /**
+         * Configure Einabit client host.
+         *
+         * @param host host
+         * @return einabit client builder
+         */
         public EinabitClientBuilder host(final String host) {
             this.host = host;
             return this;
         }
 
+        /**
+         * Configure Einabit client port.
+         *
+         * @param port port
+         * @return einabit client builder
+         */
         public EinabitClientBuilder port(final int port) {
             this.port = port;
             return this;
         }
 
+        /**
+         * Build Einabit client.
+         *
+         * @return Einabit client
+         */
         public EinabitClient build() {
             return new EinabitClient(host, port);
         }
