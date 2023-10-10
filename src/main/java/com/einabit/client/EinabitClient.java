@@ -88,7 +88,7 @@ public class EinabitClient {
                 buffer = new byte[readBytes];
             }
         } catch (IOException e) {
-            LOGGER.severe("Could not read the value");
+            LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ public class EinabitClient {
 
             return new String(dataInputStream.readAllBytes());
         } catch (IOException e) {
-            LOGGER.severe("Could not read the value");
+            LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
         }
 
         return null;
