@@ -3,6 +3,7 @@ package com.einabit.client;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.lang.InterruptedException;
 import java.net.Socket;
 import java.util.logging.Logger;
 
@@ -72,25 +73,31 @@ public class EinabitClient {
      *
      * @param variable variable
      * @param callback callback which will be executed everytime it receives a value.
+     * @return Thread
      */
-    public void tap(final String variable, final EinabitServerListener callback) {
+    public Thread tap(final String variable, final EinabitServerListener callback) {
+      return new Thread(() -> {
         try (
-                final Socket socket = connect();
-                final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
+          final Socket socket = connect();
+          final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+          final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             dataOutputStream.writeBytes(TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable + EOL);
-
-            int readBytes;
-
-            byte[] buffer = new byte[BUFFER_SIZE];
-            while ((readBytes = dataInputStream.read(buffer)) != -1) {
+            while (!Thread.currentThread().isInterrupted()) {
+              int readBytes;
+              byte[] buffer = new byte[BUFFER_SIZE];
+              if ((readBytes = dataInputStream.read(buffer)) != -1) {
                 callback.onSubscribe(new String(buffer));
                 buffer = new byte[readBytes];
+              }
+              Thread.currentThread().sleep(100);
             }
         } catch (IOException e) {
-            LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
+          LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
+        } catch (InterruptedException e) {
+          LOGGER.severe("Could not create the thread, caused by: " + e.getMessage());
         }
+      });
     }
 
     /**
