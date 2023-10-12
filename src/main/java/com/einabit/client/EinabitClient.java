@@ -125,7 +125,7 @@ public class EinabitClient {
                     .map(validEncryptor -> validEncryptor.encrypt(message))
                     .orElse(message);
 
-            dataOutputStream.writeBytes(messageToWrite);
+            dataOutputStream.writeBytes(messageToWrite + EOL);
 
             return new String(dataInputStream.readAllBytes());
         } catch (IOException e) {
