@@ -1,7 +1,7 @@
 # Documentation
 
 This repository contains the SDK or java library which allows you to query Einabit services in an easy way. Everything 
-out of the box, just provide the host to the Client builder and start querying our services. Currently, we support three
+out of the box, just provide the host to the Client builder and start querying our services. Currently, we support four
 operations:
 
 - __value__: 
