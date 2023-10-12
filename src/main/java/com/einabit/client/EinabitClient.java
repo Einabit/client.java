@@ -22,6 +22,7 @@ public class EinabitClient {
 
     private static final Logger LOGGER = Logger.getLogger(EinabitClient.class.getName());
     private static final String MESSAGE_DELIMITER = ",";
+    private static final String EOL = "\n";
     private static final int BUFFER_SIZE = 21;
 
     private final String host;
@@ -87,7 +88,7 @@ public class EinabitClient {
                 final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
-            dataOutputStream.writeBytes(TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable);
+            dataOutputStream.writeBytes(TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable + EOL);
 
             int readBytes;
 
@@ -97,7 +98,7 @@ public class EinabitClient {
                 buffer = new byte[readBytes];
             }
         } catch (IOException e) {
-            LOGGER.severe("Could not read the value");
+            LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
         }
     }
 
@@ -128,7 +129,7 @@ public class EinabitClient {
 
             return new String(dataInputStream.readAllBytes());
         } catch (IOException e) {
-            LOGGER.severe("Could not read the value");
+            LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
         }
 
         return null;
