@@ -93,7 +93,7 @@ public class EinabitClient {
             int readBytes;
 
             byte[] buffer = new byte[BUFFER_SIZE];
-            while ((readBytes = dataInputStream.read(buffer)) != -1) {
+            while ((readBytes = dataInputStream.read(buffer)) != -1 && !Thread.currentThread().isInterrupted()) {
                 callback.onSubscribe(new String(buffer));
                 buffer = new byte[readBytes];
             }
