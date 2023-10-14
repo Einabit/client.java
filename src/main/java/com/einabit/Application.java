@@ -17,7 +17,7 @@ public class Application {
 
         // Instantiate new Einabit client using provided builder, by default the port is 1337
         final EinabitClient client = EinabitClient.builder()
-                .host(System.getenv("localhost"))
+                .host(System.getenv("EINABIT_HOST"))
                 .build();
 
         // Instantiate our custom listener which implements EinabitServerListener
@@ -35,9 +35,9 @@ public class Application {
         CompletableFuture.runAsync(myRunnableThread::start);
 
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
                 System.out.println(Thread.currentThread().getName() + ": Current value temp1: " + client.value(TEMP_1));
             } catch (InterruptedException e) {
                 LOGGER.severe("Error: " + e.getMessage());
@@ -46,6 +46,7 @@ public class Application {
         }
 
         try {
+            System.out.println("Sleeping for 5s");
             Thread.sleep(5_000);
         } catch (InterruptedException e) {
             LOGGER.severe("Error: " + e.getMessage());
