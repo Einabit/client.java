@@ -1,9 +1,11 @@
-FROM openjdk:11
+FROM maven:3.9.4-eclipse-temurin-17 AS BUILD
 
-COPY . /usr/src/einabit
+COPY ./ ./
 
-WORKDIR /usr/src/einabit
+RUN mvn clean package
 
-RUN javac -d build -cp . src/main/java/com/einabit/Application.java src/main/java/com/einabit/client/*.java
+FROM eclipse-temurin:17-jre-jammy
 
-CMD ["java", "-cp", "./build", "com.einabit.Application"]
+COPY --from=BUILD /target/client-java-1.0.0.jar /client.jar
+
+CMD ["java", "-jar", "/client.jar"]
