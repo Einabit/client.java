@@ -18,6 +18,7 @@ public class Application {
         // Instantiate new Einabit client using provided builder, by default the port is 1337
         final EinabitClient client = EinabitClient.builder()
                 .host(System.getenv("EINABIT_HOST"))
+                .key(System.getenv("PASSPHRASE"))
                 .build();
 
         // Instantiate our custom listener which implements EinabitServerListener
