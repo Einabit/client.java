@@ -149,17 +149,6 @@ public class EinabitClient {
         }
 
         /**
-         * Configure Einabit client port.
-         *
-         * @param port port
-         * @return einabit client builder
-         */
-        public EinabitClientBuilder port(final int port) {
-            this.port = port;
-            return this;
-        }
-
-        /**
          * Build Einabit client.
          *
          * @return Einabit client
