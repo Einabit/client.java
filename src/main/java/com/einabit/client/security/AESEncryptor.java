@@ -17,7 +17,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class AESEncryptor implements Encryptor {
 
-    private static final Integer KEY_SIZE = 16;
+    private static final int KEY_SIZE = 16;
 
     private final String key;
 
