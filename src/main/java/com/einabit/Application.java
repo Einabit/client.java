@@ -3,6 +3,7 @@ package com.einabit;
 import com.einabit.client.EinabitClient;
 import com.einabit.client.EinabitServerListener;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
@@ -16,9 +17,13 @@ public class Application {
     public static void main(String[] args) {
 
         // Instantiate new Einabit client using provided builder, by default the port is 1337
-        final EinabitClient client = EinabitClient.builder()
-                .host(System.getenv("EINABIT_HOST"))
-                .build();
+        final EinabitClient.EinabitClientBuilder clientBuilder = EinabitClient.builder()
+                .host(System.getenv("EINABIT_HOST"));
+
+        Optional.ofNullable(System.getenv("PASSPHRASE"))
+                .ifPresent(clientBuilder::key);
+
+        final EinabitClient client = clientBuilder.build();
 
         // Instantiate our custom listener which implements EinabitServerListener
         final MyCustomListener listener = new MyCustomListener();
