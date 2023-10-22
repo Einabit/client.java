@@ -3,6 +3,7 @@ services:
   sandbox:
     image: einabit/sandbox
     environment:
+      PASSPHRASE: b3c593f0995e03105079eb2df0357c77
       CONFIG: |
         temp1:
           value:
@@ -25,7 +26,8 @@ services:
       context: .
     restart: always
     environment:
-      - EINABIT_HOST=sandbox
+      EINABIT_HOST: sandbox
+      PASSPHRASE: b3c593f0995e03105079eb2df0357c77
     depends_on:
       sandbox:
         condition: service_started
