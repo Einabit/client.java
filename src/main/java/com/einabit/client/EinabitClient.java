@@ -88,12 +88,12 @@ public class EinabitClient {
                 final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
-            final String message = TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable + EOL;
+            final String message = TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable;
             final String messageToWrite = Optional.ofNullable(encryptor)
                     .map(validEncryptor -> validEncryptor.encrypt(message))
                     .orElse(message);
 
-            dataOutputStream.writeBytes(messageToWrite);
+            dataOutputStream.writeBytes(messageToWrite + EOL);
 
             int readBytes;
 
@@ -127,10 +127,10 @@ public class EinabitClient {
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             final String messageToWrite = Optional.ofNullable(encryptor)
-                    .map(validEncryptor -> validEncryptor.encrypt(message + EOL))
-                    .orElse(message + EOL);
+                    .map(validEncryptor -> validEncryptor.encrypt(message))
+                    .orElse(message);
 
-            dataOutputStream.writeBytes(messageToWrite);
+            dataOutputStream.writeBytes(messageToWrite + EOL);
 
             return new String(dataInputStream.readAllBytes());
         } catch (IOException e) {
