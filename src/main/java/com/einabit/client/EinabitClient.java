@@ -99,7 +99,7 @@ public class EinabitClient {
 
             byte[] buffer = new byte[BUFFER_SIZE];
             while ((readBytes = dataInputStream.read(buffer)) != -1 && !Thread.currentThread().isInterrupted()) {
-                callback.onSubscribe(new String(buffer));
+                callback.onSubscribe(new String(buffer).trim());
                 buffer = new byte[readBytes];
             }
         } catch (IOException e) {
@@ -132,7 +132,7 @@ public class EinabitClient {
 
             dataOutputStream.writeBytes(messageToWrite + EOL);
 
-            return new String(dataInputStream.readAllBytes());
+            return new String(dataInputStream.readAllBytes()).trim();
         } catch (IOException e) {
             LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
         }
