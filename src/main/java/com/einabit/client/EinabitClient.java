@@ -88,18 +88,18 @@ public class EinabitClient {
                 final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
-            final String message = TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable + EOL;
+            final String message = TAP.name().toLowerCase() + MESSAGE_DELIMITER + variable;
             final String messageToWrite = Optional.ofNullable(encryptor)
                     .map(validEncryptor -> validEncryptor.encrypt(message))
                     .orElse(message);
 
-            dataOutputStream.writeBytes(messageToWrite);
+            dataOutputStream.writeBytes(messageToWrite + EOL);
 
             int readBytes;
 
             byte[] buffer = new byte[BUFFER_SIZE];
             while ((readBytes = dataInputStream.read(buffer)) != -1 && !Thread.currentThread().isInterrupted()) {
-                callback.onSubscribe(new String(buffer));
+                callback.onSubscribe(new String(buffer).trim());
                 buffer = new byte[readBytes];
             }
         } catch (IOException e) {
@@ -127,12 +127,12 @@ public class EinabitClient {
                 final DataInputStream dataInputStream = new DataInputStream(socket.getInputStream())
         ) {
             final String messageToWrite = Optional.ofNullable(encryptor)
-                    .map(validEncryptor -> validEncryptor.encrypt(message + EOL))
-                    .orElse(message + EOL);
+                    .map(validEncryptor -> validEncryptor.encrypt(message))
+                    .orElse(message);
 
-            dataOutputStream.writeBytes(messageToWrite);
+            dataOutputStream.writeBytes(messageToWrite + EOL);
 
-            return new String(dataInputStream.readAllBytes());
+            return new String(dataInputStream.readAllBytes()).trim();
         } catch (IOException e) {
             LOGGER.severe("Could not read the value, caused by: " + e.getMessage());
         }
