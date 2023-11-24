@@ -63,7 +63,14 @@ operations:
 
 # Installation
 
-This library is available in Maven central repository.
+This library is available in Maven central repository:
+```xml
+<dependency>
+  <groupId>com.einabit.client</groupId>
+  <artifactId>client-java</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 
 # Testing
 
